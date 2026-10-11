@@ -48,7 +48,7 @@ function PickCard({ episode }: { episode: Episode }) {
     >
       <div className="relative">
         <StoryArt storyId={episode.storyId} category={episode.category} className="aspect-square w-full" rounded="rounded-xl" />
-        <span className="absolute bottom-1.5 right-1.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-zinc-100">
+        <span className="absolute bottom-1.5 right-1.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
           {formatTime(episode.duration)}
         </span>
         {isCurrent && (
