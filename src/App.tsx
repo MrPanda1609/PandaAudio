@@ -1,0 +1,135 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { usePlayer } from './audio/player';
+import { groupStories, getContinueList, getCategories, getTodayPicks } from './data/library';
+import { Sidebar } from './components/Sidebar';
+import { HomeView } from './components/HomeView';
+import { StoryDetail } from './components/StoryDetail';
+import { CategoryView } from './components/CategoryView';
+import { MiniPlayer } from './components/MiniPlayer';
+import { FullPlayer } from './components/FullPlayer';
+import { EmptyState } from './components/EmptyState';
+import { PandaLogo, IconLibrary } from './components/Icons';
+
+type View = { type: 'home' } | { type: 'story'; id: string } | { type: 'category'; name: string };
+
+function LoadingSkeleton() {
+  return (
+    <div className="animate-pulse px-4 pt-6 sm:px-6 lg:px-8">
+      <div className="h-8 w-48 rounded-lg bg-ink-800" />
+      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="rounded-2xl bg-ink-850 p-4">
+            <div className="aspect-square rounded-xl bg-ink-800" />
+            <div className="mt-3 h-4 w-3/4 rounded bg-ink-800" />
+            <div className="mt-2 h-3 w-1/2 rounded bg-ink-800" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  const { episodes, libraryLoaded, current, fullOpen, setFullOpen } = usePlayer();
+  const [view, setView] = useState<View>({ type: 'home' });
+  const [mobileNav, setMobileNav] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+
+  const stories = useMemo(() => groupStories(episodes), [episodes]);
+  const continueList = useMemo(
+    () => (libraryLoaded ? getContinueList(episodes) : []),
+    // Tính lại khi đổi view / đổi tập đang phát để "Nghe tiếp" luôn mới
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [episodes, libraryLoaded, current?.id, view],
+  );
+  const categories = useMemo(() => getCategories(episodes), [episodes]);
+  const todayPicks = useMemo(
+    () => (libraryLoaded ? getTodayPicks(episodes) : []),
+    // Gợi ý đổi theo ngày — tính lại khi đổi view
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [episodes, libraryLoaded, view],
+  );
+  const activeCategory =
+    view.type === 'category' ? categories.find((c) => c.name === view.name) : undefined;
+
+  const activeStory =
+    view.type === 'story' ? stories.find((s) => s.id === view.id) : undefined;
+
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0 });
+  }, [view]);
+
+  const goHome = () => {
+    setView({ type: 'home' });
+    setMobileNav(false);
+  };
+  const openStory = (id: string) => {
+    setView({ type: 'story', id });
+    setMobileNav(false);
+  };
+  const openCategory = (name: string) => {
+    setView({ type: 'category', name });
+    setMobileNav(false);
+  };
+
+  return (
+    <div className="flex h-dvh overflow-hidden bg-ink-950 text-zinc-100">
+      <Sidebar
+        stories={stories}
+        activeView={view.type === 'story' ? view.id : 'home'}
+        onHome={goHome}
+        onSelectStory={openStory}
+        mobileOpen={mobileNav}
+        onCloseMobile={() => setMobileNav(false)}
+      />
+
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Top bar mobile */}
+        <header className="flex shrink-0 items-center gap-3 border-b border-ink-800 bg-ink-900/60 px-4 py-3 lg:hidden">
+          <button
+            onClick={() => setMobileNav(true)}
+            aria-label="Mở thư viện"
+            className="rounded-xl p-2 text-zinc-300 hover:bg-ink-800 hover:text-zinc-50"
+          >
+            <IconLibrary className="h-6 w-6" />
+          </button>
+          <button onClick={goHome} className="flex items-center gap-2">
+            <PandaLogo className="h-7 w-7" />
+            <span className="text-[17px] font-bold tracking-tight">
+              Panda<span className="text-brand-400">Audio</span>
+            </span>
+          </button>
+        </header>
+
+        <main ref={mainRef} className="flex-1 overflow-y-auto pb-32">
+          {!libraryLoaded ? (
+            <LoadingSkeleton />
+          ) : stories.length === 0 ? (
+            <EmptyState />
+          ) : activeCategory ? (
+            <CategoryView
+              name={activeCategory.name}
+              episodes={activeCategory.episodes}
+              onBack={goHome}
+              onSelectStory={openStory}
+            />
+          ) : activeStory ? (
+            <StoryDetail story={activeStory} onBack={goHome} />
+          ) : (
+            <HomeView
+              stories={stories}
+              continueList={continueList}
+              todayPicks={todayPicks}
+              categories={categories}
+              onSelectStory={openStory}
+              onSelectCategory={openCategory}
+            />
+          )}
+        </main>
+      </div>
+
+      <MiniPlayer onOpen={() => setFullOpen(true)} />
+      {fullOpen && current && <FullPlayer onClose={() => setFullOpen(false)} />}
+    </div>
+  );
+}
