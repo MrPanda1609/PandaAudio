@@ -28,11 +28,11 @@ export function CategoryView({ name, episodes, onBack, onSelectStory }: Props) {
         Chủ đề
       </button>
 
-      <div className="overflow-hidden rounded-3xl border border-white/5 bg-ink-850 p-5 sm:p-7">
+      <div className="overflow-hidden rounded-3xl border border-cardborder bg-ink-850 p-5 sm:p-7">
         <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-white/70">
           Chủ đề
         </p>
-        <h1 className="mt-1 text-[26px] font-extrabold tracking-tight text-white sm:text-3xl">
+        <h1 className="mt-1 text-[26px] font-extrabold tracking-tight text-zinc-100 sm:text-3xl">
           {name}
         </h1>
         <p className="mt-2 text-[13px] text-white/75">

@@ -1,5 +1,6 @@
 import type { Story } from '../types';
 import { IconHome, IconLibrary, IconClose } from './Icons';
+import { ThemeToggle } from './ThemeToggle';
 
 interface Props {
   stories: Story[];
@@ -8,19 +9,24 @@ interface Props {
   onSelectStory: (storyId: string) => void;
   mobileOpen: boolean;
   onCloseMobile: () => void;
+  theme: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
-function NavContent({ stories, activeView, onHome, onSelectStory }: Omit<Props, 'mobileOpen' | 'onCloseMobile'>) {
+function NavContent({ stories, activeView, onHome, onSelectStory, theme, onToggleTheme }: Omit<Props, 'mobileOpen' | 'onCloseMobile'>) {
   return (
     <div className="flex h-full flex-col">
-      <button onClick={onHome} className="flex items-center gap-3 px-2 py-1 text-left">
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-800">
-          <span role="img" aria-label="PandaAudio" className="text-[24px] leading-none">🐼</span>
-        </span>
-        <span className="text-lg font-bold tracking-tight text-zinc-50">
-          Panda<span className="text-brand-400">Audio</span>
-        </span>
-      </button>
+      <div className="flex items-center gap-3">
+        <button onClick={onHome} className="flex min-w-0 flex-1 items-center gap-3 px-2 py-1 text-left">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ink-800">
+            <span role="img" aria-label="PandaAudio" className="text-[24px] leading-none">🐼</span>
+          </span>
+          <span className="truncate text-lg font-bold tracking-tight text-zinc-50">
+            Panda<span className="text-brand-400">Audio</span>
+          </span>
+        </button>
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} className="h-10 w-10 shrink-0" />
+      </div>
 
       <nav className="mt-6 flex flex-col gap-1">
         <button

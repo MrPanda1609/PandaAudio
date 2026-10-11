@@ -44,7 +44,7 @@ function PickCard({ episode }: { episode: Episode }) {
   return (
     <button
       onClick={() => playEpisode(episode)}
-      className="w-40 shrink-0 snap-start rounded-2xl bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
+      className="w-40 shrink-0 snap-start rounded-2xl border border-cardborder bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
     >
       <div className="relative">
         <StoryArt storyId={episode.storyId} category={episode.category} className="aspect-square w-full" rounded="rounded-xl" />
@@ -75,7 +75,7 @@ function CategoryCard({ cat, onOpen }: { cat: CategoryInfo; onOpen: () => void }
   return (
     <button
       onClick={onOpen}
-      className="flex min-h-[92px] items-center justify-between gap-2 overflow-hidden rounded-2xl border border-white/5 bg-ink-850 p-4 text-left transition-transform active:scale-[0.98]"
+      className="flex min-h-[92px] items-center justify-between gap-2 overflow-hidden rounded-2xl border border-cardborder bg-ink-850 p-4 text-left transition-transform active:scale-[0.98]"
     >
       <span className="min-w-0">
         <span className="block truncate text-[15px] font-bold text-zinc-100">{cat.name}</span>
@@ -134,7 +134,7 @@ export function HomeView({
                 <button
                   key={episode.id}
                   onClick={() => playEpisode(episode)}
-                  className="flex min-h-[76px] items-center gap-3 rounded-2xl bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
+                  className="flex min-h-[76px] items-center gap-3 rounded-2xl border border-cardborder bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
                 >
                   <StoryArt storyId={episode.storyId} category={episode.category} className="h-14 w-14" minimal />
                   <div className="min-w-0 flex-1">

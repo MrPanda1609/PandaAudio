@@ -4,18 +4,6 @@
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 
-  --color-ink-950: #0a0a0f;
-  --color-ink-900: #101016;
-  --color-ink-850: #15151d;
-  --color-ink-800: #1c1c26;
-  --color-ink-700: #2b2b3a;
-  --color-ink-600: #3d3d52;
-
-  --color-brand-300: #fcd34d;
-  --color-brand-400: #fbbf24;
-  --color-brand-500: #f59e0b;
-  --color-brand-600: #d97706;
-
   --animate-fade-up: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-slide-up: slide-up 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
   --animate-fade-in: fade-in 0.25s ease both;
@@ -40,10 +28,87 @@
 }
 
 html, body {
-  background: var(--color-ink-950);
-  color: #f4f4f5;
+  background: var(--bg-page);
+  color: var(--text-1);
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior-y: none;
+}
+
+/* ——— Hệ theme: trắng hồng (mặc định) / đen hổ phách ———
+   Màu ink/zinc/brand được ánh xạ qua biến nên toàn app đổi theme tự động. */
+:root {
+  --bg-page: #fef6f9;
+  --bg-card: #ffffff;
+  --bg-hover: #fdf0f5;
+  --bg-track: #fbdcee;
+  --bg-track2: #f3c6dc;
+  --text-1: #3f3f46;
+  --text-2: #71717a;
+  --text-3: #a1a1aa;
+  --accent-3: #f9a8d4;
+  --accent-4: #f472b6;
+  --accent-5: #ec4899;
+  --accent-6: #db2777;
+  --card-border: #f9a8d4;
+  --art-from: #fde9f2;
+  --art-mid: #fbd3e4;
+  --art-to: #f9bcd7;
+  --art-bars: #ec4899;
+  --art-vignette: rgb(219 39 119 / 0.14);
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg-page: #0a0a0f;
+  --bg-card: #15151d;
+  --bg-hover: #1c1c26;
+  --bg-track: #2b2b3a;
+  --bg-track2: #3d3d52;
+  --text-1: #f4f4f5;
+  --text-2: #a1a1aa;
+  --text-3: #71717a;
+  --accent-3: #fcd34d;
+  --accent-4: #fbbf24;
+  --accent-5: #f59e0b;
+  --accent-6: #d97706;
+  --card-border: transparent;
+  --art-from: #26262f;
+  --art-mid: #141419;
+  --art-to: #0b0b0f;
+  --art-bars: #52525b;
+  --art-vignette: rgb(0 0 0 / 0.45);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-ink-950: var(--bg-page);
+  --color-ink-900: var(--bg-page);
+  --color-ink-850: var(--bg-card);
+  --color-ink-800: var(--bg-hover);
+  --color-ink-700: var(--bg-track);
+  --color-ink-600: var(--bg-track2);
+
+  --color-zinc-50: var(--text-1);
+  --color-zinc-100: var(--text-1);
+  --color-zinc-200: var(--text-2);
+  --color-zinc-300: var(--text-2);
+  --color-zinc-400: var(--text-2);
+  --color-zinc-500: var(--text-3);
+
+  --color-brand-300: var(--accent-3);
+  --color-brand-400: var(--accent-4);
+  --color-brand-500: var(--accent-5);
+  --color-brand-600: var(--accent-6);
+
+  --color-cardborder: var(--card-border);
+}
+
+/* Chuyển theme mượt — chỉ bật trong lúc bấm nút đổi theme */
+.theme-anim,
+.theme-anim *,
+.theme-anim *::before,
+.theme-anim *::after {
+  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease !important;
 }
 
 body {

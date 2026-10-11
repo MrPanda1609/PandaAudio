@@ -9,6 +9,7 @@ import { MiniPlayer } from './components/MiniPlayer';
 import { FullPlayer } from './components/FullPlayer';
 import { EmptyState } from './components/EmptyState';
 import { IconLibrary } from './components/Icons';
+import { ThemeToggle } from './components/ThemeToggle';
 
 type View = { type: 'home' } | { type: 'story'; id: string } | { type: 'category'; name: string };
 
@@ -33,7 +34,35 @@ export default function App() {
   const { episodes, libraryLoaded, current, fullOpen, setFullOpen } = usePlayer();
   const [view, setView] = useState<View>({ type: 'home' });
   const [mobileNav, setMobileNav] = useState(false);
+  // Theme trắng hồng là mặc định mỗi khi mở web; nhớ lựa chọn của user
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      return localStorage.getItem('panda-theme') === 'dark' ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
+  });
   const mainRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.dataset.theme = 'dark';
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    try {
+      localStorage.setItem('panda-theme', theme);
+    } catch {
+      /* bỏ qua */
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    // bật hiệu ứng chuyển màu mượt trong lúc đổi theme
+    document.documentElement.classList.add('theme-anim');
+    setTheme((t) => (t === 'light' ? 'dark' : 'light'));
+    setTimeout(() => document.documentElement.classList.remove('theme-anim'), 450);
+  };
 
   const stories = useMemo(() => groupStories(episodes), [episodes]);
   const continueList = useMemo(
@@ -81,6 +110,8 @@ export default function App() {
         onSelectStory={openStory}
         mobileOpen={mobileNav}
         onCloseMobile={() => setMobileNav(false)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
@@ -99,6 +130,9 @@ export default function App() {
               Panda<span className="text-brand-400">Audio</span>
             </span>
           </button>
+          <div className="ml-auto">
+            <ThemeToggle theme={theme} onToggle={toggleTheme} className="h-10 w-10" />
+          </div>
         </header>
 
         <main ref={mainRef} className="flex-1 overflow-y-auto pb-32">

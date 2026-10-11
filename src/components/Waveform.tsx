@@ -51,8 +51,11 @@ export function Waveform({ active, bars = 56, className = 'h-16 w-full' }: Props
         const x = i * (bw + gap);
         const y = (h - bh) / 2;
         const grad = ctx.createLinearGradient(0, y, 0, y + bh);
-        grad.addColorStop(0, '#fbbf24');
-        grad.addColorStop(1, '#0f7a3d');
+        const css = getComputedStyle(document.documentElement);
+        const accent = css.getPropertyValue('--accent-4').trim() || '#fbbf24';
+        const accentDeep = css.getPropertyValue('--accent-6').trim() || '#d97706';
+        grad.addColorStop(0, accent);
+        grad.addColorStop(1, accentDeep);
         ctx.fillStyle = grad;
         ctx.beginPath();
         const r = Math.min(bw / 2, 4);
