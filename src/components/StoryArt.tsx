@@ -31,7 +31,7 @@ export function StoryArt({ storyId, category, className = 'h-12 w-12', rounded =
   const hue = categoryHue(category ?? storyId);
   return (
     <div
-      className={`relative flex shrink-0 items-center justify-center overflow-hidden [container-type:inline-size] ${rounded} ${className}`}
+      className={`relative flex shrink-0 items-center justify-center overflow-hidden ${rounded} ${className}`}
       style={{ background: 'linear-gradient(150deg, #26262f 0%, #141419 55%, #0b0b0f 100%)' }}
       aria-hidden
     >
@@ -40,7 +40,7 @@ export function StoryArt({ storyId, category, className = 'h-12 w-12', rounded =
         className="absolute inset-0"
         style={{ background: `radial-gradient(90% 70% at 50% 0%, hsl(${hue} 45% 55% / 0.10), transparent 70%)` }}
       />
-      {!minimal && <ArtMark className="relative w-[36cqw]" />}
+      {!minimal && <ArtMark className="relative w-[36%]" />}
       {/* vignette cho chiều sâu */}
       <div
         className="absolute inset-0"
