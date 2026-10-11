@@ -24,7 +24,7 @@ export function StoryCard({ story, onOpen }: Props) {
       className="group flex flex-col gap-3 rounded-2xl bg-ink-850 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:bg-ink-800 focus-visible:outline-2 focus-visible:outline-brand-400"
     >
       <div className="relative">
-        <StoryArt storyId={story.id} className="aspect-square w-full" rounded="rounded-xl" />
+        <StoryArt storyId={story.id} category={story.episodes[0]?.category} className="aspect-square w-full" rounded="rounded-xl" />
         <span
           role="button"
           aria-label={`Phát ${story.title}`}

@@ -122,28 +122,7 @@ export function IconCheck({ className }: IconProps) {
   );
 }
 
-/** Logo gấu trúc PandaAudio — vẽ tay bằng SVG. */
-export function PandaLogo({ className }: IconProps) {
-  return (
-    <svg viewBox="0 0 48 48" className={className ?? 'h-8 w-8'} aria-hidden>
-      <circle cx="11.5" cy="11.5" r="7" fill="#0a0a0f" />
-      <circle cx="36.5" cy="11.5" r="7" fill="#0a0a0f" />
-      <circle cx="24" cy="26" r="16.5" fill="#f4f4f5" />
-      <ellipse cx="16.8" cy="24" rx="4.6" ry="6.2" fill="#0a0a0f" transform="rotate(-18 16.8 24)" />
-      <ellipse cx="31.2" cy="24" rx="4.6" ry="6.2" fill="#0a0a0f" transform="rotate(18 31.2 24)" />
-      <ellipse cx="17.6" cy="24" rx="2.7" ry="3.1" fill="#fff" />
-      <ellipse cx="30.4" cy="24" rx="2.7" ry="3.1" fill="#fff" />
-      <circle cx="17.6" cy="24.5" r="1.55" fill="#0a0a0f" />
-      <circle cx="30.4" cy="24.5" r="1.55" fill="#0a0a0f" />
-      <circle cx="17" cy="23.8" r="0.6" fill="#fff" />
-      <circle cx="29.8" cy="23.8" r="0.6" fill="#fff" />
-      <ellipse cx="24" cy="31.6" rx="2.7" ry="2" fill="#0a0a0f" />
-      <path d="M24 33.6c0 2.4-2.2 3.4-4.4 3.2M24 33.6c0 2.4 2.2 3.4 4.4 3.2" stroke="#0a0a0f" strokeWidth="1.6" strokeLinecap="round" fill="none" />
-      <ellipse cx="13.5" cy="30.5" rx="2.6" ry="1.6" fill="#f9a8d4" opacity="0.7" />
-      <ellipse cx="34.5" cy="30.5" rx="2.6" ry="1.6" fill="#f9a8d4" opacity="0.7" />
-    </svg>
-  );
-}
+/** Logo PandaAudio — dùng emoji 🐼 thay cho SVG vẽ tay. */
 
 export function IconChevronRight({ className }: IconProps) {
   return (

@@ -1,6 +1,5 @@
 import type { Episode, Story } from '../types';
 import type { ContinueItem, CategoryInfo } from '../data/library';
-import { storyHue } from '../data/library';
 import { StoryCard } from './StoryCard';
 import { StoryArt } from './StoryArt';
 import { formatTime } from '../lib/format';
@@ -48,7 +47,7 @@ function PickCard({ episode }: { episode: Episode }) {
       className="w-40 shrink-0 snap-start rounded-2xl bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
     >
       <div className="relative">
-        <StoryArt storyId={episode.storyId} className="aspect-square w-full" rounded="rounded-xl" />
+        <StoryArt storyId={episode.storyId} category={episode.category} className="aspect-square w-full" rounded="rounded-xl" />
         <span className="absolute bottom-1.5 right-1.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-zinc-100">
           {formatTime(episode.duration)}
         </span>
@@ -71,25 +70,20 @@ function PickCard({ episode }: { episode: Episode }) {
   );
 }
 
-/** Thẻ chủ đề — gradient theo tên, bấm để duyệt. */
+/** Thẻ chủ đề — đen thống nhất, bấm để duyệt. */
 function CategoryCard({ cat, onOpen }: { cat: CategoryInfo; onOpen: () => void }) {
-  const hue = storyHue(`cat-${cat.name}`);
-  const hue2 = (hue + 50) % 360;
   return (
     <button
       onClick={onOpen}
-      className="flex min-h-[92px] items-center justify-between gap-2 overflow-hidden rounded-2xl p-4 text-left transition-transform active:scale-[0.98]"
-      style={{
-        background: `linear-gradient(135deg, hsl(${hue} 55% 30%) 0%, hsl(${hue2} 60% 14%) 100%)`,
-      }}
+      className="flex min-h-[92px] items-center justify-between gap-2 overflow-hidden rounded-2xl border border-white/5 bg-ink-850 p-4 text-left transition-transform active:scale-[0.98]"
     >
       <span className="min-w-0">
-        <span className="block truncate text-[15px] font-bold text-white">{cat.name}</span>
-        <span className="mt-1 block text-[12px] text-white/70">
+        <span className="block truncate text-[15px] font-bold text-zinc-100">{cat.name}</span>
+        <span className="mt-1 block text-[12px] text-zinc-500">
           {cat.episodes.length} tập · {cat.stories.length} truyện
         </span>
       </span>
-      <IconChevronRight className="h-5 w-5 shrink-0 text-white/60" />
+      <IconChevronRight className="h-5 w-5 shrink-0 text-brand-400" />
     </button>
   );
 }
@@ -142,7 +136,7 @@ export function HomeView({
                   onClick={() => playEpisode(episode)}
                   className="flex min-h-[76px] items-center gap-3 rounded-2xl bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
                 >
-                  <StoryArt storyId={episode.storyId} className="h-14 w-14" minimal />
+                  <StoryArt storyId={episode.storyId} category={episode.category} className="h-14 w-14" minimal />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[14.5px] font-semibold text-zinc-100">
                       {episode.title}

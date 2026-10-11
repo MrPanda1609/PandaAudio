@@ -36,7 +36,7 @@ export function StoryDetail({ story, onBack }: Props) {
       </button>
 
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
-        <StoryArt storyId={story.id} className="h-40 w-40 sm:h-52 sm:w-52" rounded="rounded-2xl" />
+        <StoryArt storyId={story.id} category={story.episodes[0]?.category} className="h-40 w-40 sm:h-52 sm:w-52" rounded="rounded-2xl" />
         <div className="min-w-0 pb-1">
           <p className="text-[13px] font-semibold uppercase tracking-wider text-zinc-400">Bộ truyện</p>
           <h1 className="mt-1 text-[28px] font-extrabold tracking-tight text-zinc-50 sm:text-4xl">

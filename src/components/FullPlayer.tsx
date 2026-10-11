@@ -61,6 +61,7 @@ export function FullPlayer({ onClose }: Props) {
       <div className="relative flex flex-1 flex-col items-center justify-center gap-4 overflow-y-auto px-6 pb-6 sm:gap-5">
         <StoryArt
           storyId={current.storyId}
+          category={current.category}
           className="h-56 w-56 shadow-2xl shadow-black/60 sm:h-64 sm:w-64"
           rounded="rounded-3xl"
         />

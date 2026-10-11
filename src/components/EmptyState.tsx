@@ -1,10 +1,10 @@
-import { PandaLogo } from './Icons';
+import { ArtMark } from './StoryArt';
 
 export function EmptyState() {
   return (
     <div className="flex min-h-[60vh] animate-fade-up flex-col items-center justify-center px-6 text-center">
       <span className="flex h-24 w-24 items-center justify-center rounded-3xl bg-ink-850 shadow-xl shadow-black/30">
-        <PandaLogo className="h-16 w-16 opacity-90" />
+        <ArtMark className="w-12" />
       </span>
       <h1 className="mt-6 text-2xl font-bold tracking-tight text-zinc-50">Chưa có truyện nào</h1>
       <p className="mt-3 max-w-md text-[14px] leading-relaxed text-zinc-400">

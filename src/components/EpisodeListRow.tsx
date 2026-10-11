@@ -53,7 +53,7 @@ export function EpisodeListRow({ episode, numbered = false, index = 0, showStory
           {index + 1}
         </span>
       ) : (
-        <StoryArt storyId={episode.storyId} className="hidden h-11 w-11 sm:flex" rounded="rounded-lg" minimal />
+        <StoryArt storyId={episode.storyId} category={episode.category} className="hidden h-11 w-11 sm:flex" rounded="rounded-lg" minimal />
       )}
 
       <span className="min-w-0 flex-1">

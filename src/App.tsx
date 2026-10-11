@@ -8,7 +8,7 @@ import { CategoryView } from './components/CategoryView';
 import { MiniPlayer } from './components/MiniPlayer';
 import { FullPlayer } from './components/FullPlayer';
 import { EmptyState } from './components/EmptyState';
-import { PandaLogo, IconLibrary } from './components/Icons';
+import { IconLibrary } from './components/Icons';
 
 type View = { type: 'home' } | { type: 'story'; id: string } | { type: 'category'; name: string };
 
@@ -94,7 +94,7 @@ export default function App() {
             <IconLibrary className="h-6 w-6" />
           </button>
           <button onClick={goHome} className="flex items-center gap-2">
-            <PandaLogo className="h-7 w-7" />
+            <span role="img" aria-label="PandaAudio" className="text-[24px] leading-none">🐼</span>
             <span className="text-[17px] font-bold tracking-tight">
               Panda<span className="text-brand-400">Audio</span>
             </span>

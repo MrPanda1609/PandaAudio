@@ -51,7 +51,7 @@ export function Waveform({ active, bars = 56, className = 'h-16 w-full' }: Props
         const x = i * (bw + gap);
         const y = (h - bh) / 2;
         const grad = ctx.createLinearGradient(0, y, 0, y + bh);
-        grad.addColorStop(0, '#34e07c');
+        grad.addColorStop(0, '#fbbf24');
         grad.addColorStop(1, '#0f7a3d');
         ctx.fillStyle = grad;
         ctx.beginPath();

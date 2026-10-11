@@ -1,5 +1,5 @@
 import type { Story } from '../types';
-import { PandaLogo, IconHome, IconLibrary, IconClose } from './Icons';
+import { IconHome, IconLibrary, IconClose } from './Icons';
 
 interface Props {
   stories: Story[];
@@ -15,7 +15,7 @@ function NavContent({ stories, activeView, onHome, onSelectStory }: Omit<Props, 
     <div className="flex h-full flex-col">
       <button onClick={onHome} className="flex items-center gap-3 px-2 py-1 text-left">
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-ink-800">
-          <PandaLogo className="h-7 w-7" />
+          <span role="img" aria-label="PandaAudio" className="text-[24px] leading-none">🐼</span>
         </span>
         <span className="text-lg font-bold tracking-tight text-zinc-50">
           Panda<span className="text-brand-400">Audio</span>

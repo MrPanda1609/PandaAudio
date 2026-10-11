@@ -31,7 +31,7 @@ export function QueuePanel({ onClose }: Props) {
           <div className="mb-2 px-2">
             <p className="text-[12px] font-semibold uppercase tracking-wider text-zinc-500">Đang phát</p>
             <div className="mt-2 flex items-center gap-3 rounded-xl bg-ink-800 p-2.5">
-              <StoryArt storyId={current.storyId} className="h-11 w-11" minimal />
+              <StoryArt storyId={current.storyId} category={current.category} className="h-11 w-11" minimal />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[14px] font-medium text-brand-300">{current.title}</p>
                 <p className="truncate text-[12px] text-zinc-500">{current.storyTitle}</p>
@@ -52,7 +52,7 @@ export function QueuePanel({ onClose }: Props) {
                   onClick={() => playAt(index + 1 + i)}
                   className="flex w-full items-center gap-3 rounded-xl p-2.5 text-left transition-colors hover:bg-ink-850"
                 >
-                  <StoryArt storyId={ep.storyId} className="h-11 w-11" minimal />
+                  <StoryArt storyId={ep.storyId} category={ep.category} className="h-11 w-11" minimal />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[14px] font-medium text-zinc-200">{ep.title}</p>
                     <p className="truncate text-[12px] text-zinc-500">{ep.storyTitle}</p>

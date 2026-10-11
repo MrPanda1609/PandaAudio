@@ -76,6 +76,19 @@ export function storyHue(storyId: string): number {
   return h;
 }
 
+/** Màu theo chủ đề — đồng nhất cả app: nhìn màu là biết thể loại. */
+const CATEGORY_HUES: Record<string, number> = {
+  'Xuyên không': 268, // tím
+  'Báo thù': 4, // đỏ
+  'Mẹ chồng – Nàng dâu': 24, // cam
+  'Viễn tưởng': 210, // xanh dương
+};
+
+export function categoryHue(name?: string): number {
+  if (name && CATEGORY_HUES[name] !== undefined) return CATEGORY_HUES[name];
+  return storyHue(name ?? 'khac');
+}
+
 export const UNCATEGORIZED = 'Khác';
 
 export interface CategoryInfo {

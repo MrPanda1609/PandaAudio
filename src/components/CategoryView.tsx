@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { Episode } from '../types';
-import { groupStories, storyHue } from '../data/library';
+import { groupStories } from '../data/library';
 import { EpisodeListRow } from './EpisodeListRow';
 import { StoryCard } from './StoryCard';
 import { formatDurationLong } from '../lib/format';
@@ -17,8 +17,6 @@ interface Props {
 export function CategoryView({ name, episodes, onBack, onSelectStory }: Props) {
   const stories = useMemo(() => groupStories(episodes), [episodes]);
   const totalDur = episodes.reduce((s, e) => s + (e.duration || 0), 0);
-  const hue = storyHue(`cat-${name}`);
-  const hue2 = (hue + 50) % 360;
 
   return (
     <div className="animate-fade-up px-4 pb-8 pt-6 sm:px-6 lg:px-8">
@@ -30,12 +28,7 @@ export function CategoryView({ name, episodes, onBack, onSelectStory }: Props) {
         Chủ đề
       </button>
 
-      <div
-        className="overflow-hidden rounded-3xl p-5 sm:p-7"
-        style={{
-          background: `linear-gradient(135deg, hsl(${hue} 55% 32%) 0%, hsl(${hue2} 60% 14%) 100%)`,
-        }}
-      >
+      <div className="overflow-hidden rounded-3xl border border-white/5 bg-ink-850 p-5 sm:p-7">
         <p className="text-[12px] font-semibold uppercase tracking-[0.18em] text-white/70">
           Chủ đề
         </p>

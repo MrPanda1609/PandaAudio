@@ -28,7 +28,7 @@ export function MiniPlayer({ onOpen }: Props) {
             aria-label="Mở trình phát"
             className="flex min-h-[48px] min-w-[48px] shrink-0 items-center justify-center"
           >
-            <StoryArt storyId={current.storyId} className="h-11 w-11" rounded="rounded-lg" minimal />
+            <StoryArt storyId={current.storyId} category={current.category} className="h-11 w-11" rounded="rounded-lg" minimal />
           </button>
           <button onClick={onOpen} className="min-w-0 flex-1 self-stretch py-1 text-left">
             <p className="truncate text-[14.5px] font-semibold text-zinc-100">{current.storyTitle}</p>
