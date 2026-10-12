@@ -46,7 +46,7 @@ function PickCard({ episode }: { episode: Episode }) {
   return (
     <button
       onClick={() => playEpisode(episode)}
-      className="w-40 shrink-0 snap-start rounded-2xl border border-cardborder bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
+      className="w-40 shrink-0 snap-start rounded-2xl border border-cardborder bg-ink-850 p-3 text-left transition-colors active:bg-ink-800 lg:w-auto"
     >
       <div className="relative">
         <StoryArt storyId={episode.storyId} category={episode.category} className="aspect-square w-full" rounded="rounded-xl" />
@@ -80,7 +80,7 @@ function RecentCard({ story, onOpen }: { story: Story; onOpen: (storyId: string)
   return (
     <button
       onClick={() => onOpen(story.id)}
-      className="w-40 shrink-0 snap-start rounded-2xl border border-cardborder bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
+      className="w-40 shrink-0 snap-start rounded-2xl border border-cardborder bg-ink-850 p-3 text-left transition-colors active:bg-ink-800 lg:w-auto"
     >
       <div className="relative">
         <StoryArt storyId={story.id} category={cat} className="aspect-square w-full" rounded="rounded-xl" />
@@ -145,7 +145,7 @@ export function HomeView({
             <h2 className="text-[22px] font-extrabold tracking-tight text-zinc-50">Vừa mới cập nhật</h2>
             <p className="mt-0.5 text-[13px] text-zinc-500">Truyện mới thêm vào thư viện</p>
           </div>
-          <div className="-mx-0 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:px-6 lg:px-8">
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:px-6 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-8 xl:grid-cols-6 2xl:grid-cols-8">
             {recentStories.map((story) => (
               <RecentCard key={story.id} story={story} onOpen={onSelectStory} />
             ))}
@@ -163,7 +163,7 @@ export function HomeView({
               <p className="mt-0.5 text-[13px] text-zinc-500">Gợi ý mới mỗi ngày, đúng gu của bạn</p>
             </div>
           </div>
-          <div className="-mx-0 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:px-6 lg:px-8">
+          <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:px-6 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-8 xl:grid-cols-6 2xl:grid-cols-8">
             {todayPicks.map((ep) => (
               <PickCard key={ep.id} episode={ep} />
             ))}
