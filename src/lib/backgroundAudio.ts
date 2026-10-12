@@ -3,6 +3,7 @@ import { Capacitor } from '@capacitor/core';
 interface BackgroundAudioPlugin {
   enable(opts: { title?: string; text?: string }): Promise<{ enabled: boolean }>;
   disable(): Promise<{ enabled: boolean }>;
+  setPlaying(opts: { playing: boolean }): Promise<{ playing: boolean }>;
 }
 
 function getPlugin(): BackgroundAudioPlugin | null {
@@ -23,5 +24,16 @@ export async function setBackgroundAudio(enabled: boolean, title?: string, text?
     else await plugin.disable();
   } catch {
     /* bỏ qua khi plugin lỗi */
+  }
+}
+
+/** Đồng bộ icon Play/Pause trên notification với trạng thái thực tế. */
+export async function syncNotificationPlaying(playing: boolean) {
+  const plugin = getPlugin();
+  if (!plugin) return;
+  try {
+    await plugin.setPlaying({ playing });
+  } catch {
+    /* bỏ qua */
   }
 }

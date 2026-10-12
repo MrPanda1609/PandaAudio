@@ -12,6 +12,40 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 @CapacitorPlugin(name = "BackgroundAudio")
 public class BackgroundAudioPlugin extends Plugin {
 
+    private static BackgroundAudioPlugin instance;
+
+    @Override
+    public void load() {
+        instance = this;
+    }
+
+    /** Service gọi khi user bấm Play/Pause trên notification/màn hình khóa. */
+    public static void notifyToggle(boolean playing) {
+        if (instance != null && instance.getBridge() != null) {
+            final boolean p = playing;
+            instance.getBridge().executeOnMainThread(() ->
+                instance.getBridge().eval(
+                    "window.dispatchEvent(new CustomEvent('panda-native-toggle',{detail:{playing:" + p + "}}))",
+                    null
+                )
+            );
+        }
+    }
+
+    /** Cập nhật trạng thái play/pause của notification (đồng bộ icon). */
+    @PluginMethod
+    public void setPlaying(PluginCall call) {
+        boolean playing = call.getBoolean("playing", true);
+        Intent i = new Intent(getContext(), MediaPlaybackService.class);
+        i.putExtra("playing", playing);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getContext().startForegroundService(i);
+        } else {
+            getContext().startService(i);
+        }
+        call.resolve(new JSObject().put("playing", playing));
+    }
+
     @PluginMethod
     public void enable(PluginCall call) {
         String title = call.getString("title", "PandaAudio");
@@ -19,6 +53,7 @@ public class BackgroundAudioPlugin extends Plugin {
         Intent i = new Intent(getContext(), MediaPlaybackService.class);
         i.putExtra("title", title);
         i.putExtra("text", text);
+        i.putExtra("playing", true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             getContext().startForegroundService(i);
         } else {

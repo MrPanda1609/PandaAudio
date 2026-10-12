@@ -110,7 +110,7 @@ html, body {
 .theme-anim *,
 .theme-anim *::before,
 .theme-anim *::after {
-  transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease !important;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease !important;
 }
 
 /* Shimmer cho skeleton loading và ảnh đang tải */

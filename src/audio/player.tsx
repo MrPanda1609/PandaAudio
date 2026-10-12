@@ -13,7 +13,7 @@ import { flushProgress, getProgress, loadRate, saveProgress, saveRate } from '..
 import { clearMediaSession, setupMediaSession, updatePositionState } from '../lib/mediaSession';
 import { sharedAnalyser } from './analyser';
 import { loadLibrary } from '../data/library';
-import { setBackgroundAudio } from '../lib/backgroundAudio';
+import { setBackgroundAudio, syncNotificationPlaying } from '../lib/backgroundAudio';
 import { resolveAudioUrl } from '../lib/appUrls';
 
 export type SleepMode =
@@ -73,6 +73,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     // 'metadata' thay vì 'auto': chỉ tải thông tin file trước, bấm phát mới stream.
     // 'auto' sẽ tải cả file 15MB+ ngay khi chọn truyện → chậm, tốn data 4G.
     a.preload = 'metadata';
+    // CORS: app native load audio từ server khác origin với WebView,
+    // cần crossorigin để Web Audio analyser không bị mute.
+    a.crossOrigin = 'anonymous';
     audioRef.current = a;
   }
 
@@ -168,6 +171,21 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       a.pause();
     }
   }, []);
+
+  // App Android: notification/màn hình khóa bấm Play/Pause → đồng bộ với WebView
+  useEffect(() => {
+    const onNativeToggle = (e: Event) => {
+      const playing = (e as CustomEvent).detail?.playing;
+      const a = audioRef.current;
+      if (!a) return;
+      // playing=true nghĩa là service vừa chuyển sang trạng thái phát → WebView phát theo
+      // playing=false → WebView dừng theo
+      if (playing === true && a.paused) toggle();
+      else if (playing === false && !a.paused) toggle();
+    };
+    window.addEventListener('panda-native-toggle', onNativeToggle);
+    return () => window.removeEventListener('panda-native-toggle', onNativeToggle);
+  }, [toggle]);
 
   const next = useCallback(() => {
     const s = st.current;
@@ -285,12 +303,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       // App Android: bật foreground service giữ audio dưới nền
       const ep = st.current.queue[st.current.index];
       void setBackgroundAudio(true, ep?.storyTitle, ep?.title);
+      void syncNotificationPlaying(true);
     };
     const onPlaying = () => setLoading(false);
     const onPause = () => {
       setPlaying(false);
       setLoading(false);
       void setBackgroundAudio(false);
+      void syncNotificationPlaying(false);
       sharedAnalyser.suspend(); // dừng xử lý sóng âm để đỡ tốn pin
       const ep = st.current.queue[st.current.index];
       if (ep) flushProgress(ep.id, a.currentTime);
