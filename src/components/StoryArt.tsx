@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { categoryHue } from '../data/library';
 
 interface Props {
@@ -11,6 +12,11 @@ interface Props {
 /** Chiều cao tương đối của các cột sóng âm trang trí */
 const BARS = [0.42, 0.75, 0.55, 1, 0.62, 0.88, 0.48];
 
+/** Đường dẫn thumbnail AI của truyện (nếu đã được tạo). */
+export function storyArtwork(storyId: string): string {
+  return `/art/${storyId}.webp`;
+}
+
 /** Motif sóng âm trừu tượng — dùng cho artwork và empty state. */
 export function ArtMark({ className = 'w-10' }: { className?: string }) {
   return (
@@ -23,12 +29,13 @@ export function ArtMark({ className = 'w-10' }: { className?: string }) {
 }
 
 /**
- * Artwork theo theme: theme sáng = nền hồng nhạt, theme tối = nền đen.
- * Chỉ pha một chút tông theo chủ đề ở mức rất nhẹ.
- * Không còn mặt gấu nhìn chằm chằm trên card.
+ * Artwork theo theme: nếu có thumbnail AI thì dùng ảnh thật,
+ * chưa có thì fallback về nền gradient + motif sóng âm.
  */
 export function StoryArt({ storyId, category, className = 'h-12 w-12', rounded = 'rounded-xl', minimal = false }: Props) {
   const hue = categoryHue(category ?? storyId);
+  const [imgOk, setImgOk] = useState(true);
+  const [imgGone, setImgGone] = useState(false);
   return (
     <div
       className={`relative flex shrink-0 items-center justify-center overflow-hidden ${rounded} ${className}`}
@@ -40,7 +47,19 @@ export function StoryArt({ storyId, category, className = 'h-12 w-12', rounded =
         className="absolute inset-0"
         style={{ background: `radial-gradient(90% 70% at 50% 0%, hsl(${hue} 45% 55% / 0.10), transparent 70%)` }}
       />
-      {!minimal && <ArtMark className="relative w-[36%]" />}
+      {!minimal && imgGone && <ArtMark className="relative w-[36%]" />}
+      {/* thumbnail AI — lỗi thì ẩn đi, dùng motif sóng */}
+      {imgOk && (
+        <img
+          src={storyArtwork(storyId)}
+          alt=""
+          loading="lazy"
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover"
+          onLoad={() => setImgGone(false)}
+          onError={() => { setImgOk(false); setImgGone(true); }}
+        />
+      )}
       {/* vignette cho chiều sâu */}
       <div
         className="absolute inset-0"

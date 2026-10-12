@@ -27,8 +27,8 @@ function greeting(): string {
 
 function SectionTitle({ title, sub }: { title: string; sub?: string }) {
   return (
-    <div className="mb-3">
-      <h2 className="text-[19px] font-bold tracking-tight text-zinc-50">{title}</h2>
+    <div className="mb-4">
+      <h2 className="text-[22px] font-extrabold tracking-tight text-zinc-50">{title}</h2>
       {sub && <p className="mt-0.5 text-[13px] text-zinc-500">{sub}</p>}
     </div>
   );
@@ -110,7 +110,7 @@ export function HomeView({
           <div className="mb-3 flex items-center gap-2 px-4 sm:px-6 lg:px-8">
             <IconSparkle className="h-5 w-5 text-brand-400" />
             <div>
-              <h2 className="text-[19px] font-bold tracking-tight text-zinc-50">Nghe gì hôm nay?</h2>
+              <h2 className="text-[22px] font-extrabold tracking-tight text-zinc-50">Nghe gì hôm nay?</h2>
               <p className="mt-0.5 text-[13px] text-zinc-500">Gợi ý mới mỗi ngày, đúng gu của bạn</p>
             </div>
           </div>
