@@ -1,5 +1,6 @@
 import type { Episode, Story } from '../types';
 import type { ContinueItem, CategoryInfo } from '../data/library';
+import { isNewStory } from '../data/library';
 import { StoryCard } from './StoryCard';
 import { StoryArt } from './StoryArt';
 import { formatTime } from '../lib/format';
@@ -11,6 +12,7 @@ interface Props {
   stories: Story[];
   continueList: ContinueItem[];
   todayPicks: Episode[];
+  recentStories: Story[];
   categories: CategoryInfo[];
   onSelectStory: (storyId: string) => void;
   onSelectCategory: (name: string) => void;
@@ -70,6 +72,37 @@ function PickCard({ episode }: { episode: Episode }) {
   );
 }
 
+/** Thẻ truyện mới cập nhật — cuộn ngang, có badge MỚI. */
+function RecentCard({ story, onOpen }: { story: Story; onOpen: (storyId: string) => void }) {
+  const isNew = isNewStory(story.episodes);
+  const totalDur = story.episodes.reduce((s, e) => s + e.duration, 0);
+  const cat = story.episodes[0]?.category;
+  return (
+    <button
+      onClick={() => onOpen(story.id)}
+      className="w-40 shrink-0 snap-start rounded-2xl border border-cardborder bg-ink-850 p-3 text-left transition-colors active:bg-ink-800"
+    >
+      <div className="relative">
+        <StoryArt storyId={story.id} category={cat} className="aspect-square w-full" rounded="rounded-xl" />
+        {isNew && (
+          <span className="absolute left-1.5 top-1.5 rounded-md bg-brand-500 px-1.5 py-0.5 text-[11px] font-bold text-ink-950">
+            MỚI
+          </span>
+        )}
+        <span className="absolute bottom-1.5 right-1.5 rounded-md bg-black/70 px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-white">
+          {formatTime(totalDur)}
+        </span>
+      </div>
+      <p className="mt-2.5 line-clamp-2 min-h-[2.5em] text-[13.5px] font-semibold leading-snug text-zinc-100">
+        {story.title}
+      </p>
+      <p className="mt-1 truncate text-[12px] text-zinc-500">
+        {story.episodes.length} tập · {cat ?? 'Truyện audio'}
+      </p>
+    </button>
+  );
+}
+
 /** Thẻ chủ đề — đen thống nhất, bấm để duyệt. */
 function CategoryCard({ cat, onOpen }: { cat: CategoryInfo; onOpen: () => void }) {
   return (
@@ -92,6 +125,7 @@ export function HomeView({
   stories,
   continueList,
   todayPicks,
+  recentStories,
   categories,
   onSelectStory,
   onSelectCategory,
@@ -103,6 +137,21 @@ export function HomeView({
       <h1 className="px-4 text-[22px] font-bold tracking-tight text-zinc-50 sm:px-6 sm:text-2xl lg:px-8">
         {greeting()}
       </h1>
+
+      {/* Vừa mới cập nhật — truyện mới thêm vào thư viện */}
+      {recentStories.length > 0 && (
+        <section className="mt-7">
+          <div className="mb-3 px-4 sm:px-6 lg:px-8">
+            <h2 className="text-[22px] font-extrabold tracking-tight text-zinc-50">Vừa mới cập nhật</h2>
+            <p className="mt-0.5 text-[13px] text-zinc-500">Truyện mới thêm vào thư viện</p>
+          </div>
+          <div className="-mx-0 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:px-6 lg:px-8">
+            {recentStories.map((story) => (
+              <RecentCard key={story.id} story={story} onOpen={onSelectStory} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Nghe gì hôm nay? — gợi ý đổi mỗi ngày */}
       {todayPicks.length > 0 && (

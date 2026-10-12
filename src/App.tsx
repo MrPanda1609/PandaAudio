@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { usePlayer } from './audio/player';
-import { groupStories, getContinueList, getCategories, getTodayPicks } from './data/library';
+import { groupStories, getContinueList, getCategories, getTodayPicks, getRecentStories } from './data/library';
 import { Sidebar } from './components/Sidebar';
 import { HomeView } from './components/HomeView';
 import { StoryDetail } from './components/StoryDetail';
@@ -78,6 +78,10 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [episodes, libraryLoaded, view],
   );
+  const recentStories = useMemo(
+    () => (libraryLoaded ? getRecentStories(episodes) : []),
+    [episodes, libraryLoaded],
+  );
   const activeCategory =
     view.type === 'category' ? categories.find((c) => c.name === view.name) : undefined;
 
@@ -154,6 +158,7 @@ export default function App() {
               stories={stories}
               continueList={continueList}
               todayPicks={todayPicks}
+              recentStories={recentStories}
               categories={categories}
               onSelectStory={openStory}
               onSelectCategory={openCategory}

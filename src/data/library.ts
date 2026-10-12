@@ -164,3 +164,21 @@ export function getTodayPicks(episodes: Episode[], count = 8): Episode[] {
   const rest = shuffled.filter((e) => !contIds.has(e.id));
   return [...first, ...rest].slice(0, count);
 }
+
+/** Truyện mới cập nhật — sắp xếp theo addedAt mới nhất, mỗi truyện 1 đại diện. */
+export function getRecentStories(episodes: Episode[], count = 8): Story[] {
+  const stories = groupStories(episodes);
+  const latest = (s: Story) =>
+    s.episodes.reduce((max, e) => (e.addedAt && e.addedAt > max ? e.addedAt : max), '');
+  return stories
+    .slice()
+    .sort((a, b) => latest(b).localeCompare(latest(a)))
+    .slice(0, count);
+}
+
+/** Story có phải "mới" (thêm trong 14 ngày gần đây) — để gắn badge MỚI. */
+export function isNewStory(episodes: Episode[]): boolean {
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const now = new Date().toISOString().slice(0, 10);
+  return episodes.some((e) => e.addedAt && e.addedAt >= twoWeeksAgo && e.addedAt <= now);
+}

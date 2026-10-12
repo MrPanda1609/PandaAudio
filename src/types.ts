@@ -12,6 +12,8 @@ export interface Episode {
   source?: string;
   /** Chủ đề: "Xuyên không", "Viễn tưởng", "Mẹ chồng – Nàng dâu", "Báo thù"... */
   category?: string;
+  /** Ngày thêm vào thư viện (YYYY-MM-DD) — dùng cho mục "Vừa mới cập nhật" */
+  addedAt?: string;
 }
 
 /** Một bộ truyện = nhóm các tập có cùng storyId */
