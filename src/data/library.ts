@@ -165,14 +165,16 @@ export function getTodayPicks(episodes: Episode[], count = 8): Episode[] {
   return [...first, ...rest].slice(0, count);
 }
 
-/** Truyện mới cập nhật — sắp xếp theo addedAt mới nhất, mỗi truyện 1 đại diện. */
+/** Truyện mới cập nhật — sắp xếp theo addedAt mới nhất, mỗi truyện 1 đại diện.
+ *  Nếu cùng ngày, truyện thêm sau (nằm sau trong mảng) xếp trước. */
 export function getRecentStories(episodes: Episode[], count = 8): Story[] {
   const stories = groupStories(episodes);
   const latest = (s: Story) =>
     s.episodes.reduce((max, e) => (e.addedAt && e.addedAt > max ? e.addedAt : max), '');
+  const firstIdx = (s: Story) => episodes.findIndex((e) => e.storyId === s.id);
   return stories
     .slice()
-    .sort((a, b) => latest(b).localeCompare(latest(a)))
+    .sort((a, b) => latest(b).localeCompare(latest(a)) || firstIdx(b) - firstIdx(a))
     .slice(0, count);
 }
 
