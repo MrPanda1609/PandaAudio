@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PandaAudio</string>
+    <string name="title_activity_main">PandaAudio</string>
+    <string name="package_name">com.panda.audio</string>
+    <string name="custom_url_scheme">com.panda.audio</string>
+</resources>

@@ -1,5 +1,6 @@
 import type { Episode, Story } from '../types';
 import { getProgress } from '../lib/storage';
+import { isNativeApp } from '../lib/appUrls';
 
 function isEpisode(x: unknown): x is Episode {
   if (typeof x !== 'object' || x === null) return false;
@@ -14,17 +15,25 @@ function isEpisode(x: unknown): x is Episode {
   );
 }
 
-/** Đọc thư viện từ public/data/library.json — graceful khi file rỗng/lỗi. */
+/** Đọc thư viện từ public/data/library.json — graceful khi file rỗng/lỗi.
+ *  Trong app native: ưu tiên tải từ server để tự cập nhật truyện mới. */
 export async function loadLibrary(): Promise<Episode[]> {
-  try {
-    const res = await fetch('/data/library.json', { cache: 'no-store' });
-    if (!res.ok) return [];
-    const data: unknown = await res.json();
-    if (!Array.isArray(data)) return [];
-    return data.filter(isEpisode);
-  } catch {
-    return [];
+  const urls = isNativeApp()
+    ? ['https://panda-audio.vercel.app/data/library.json', '/data/library.json']
+    : ['/data/library.json'];
+  for (const url of urls) {
+    try {
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const data: unknown = await res.json();
+      if (!Array.isArray(data)) continue;
+      const eps = data.filter(isEpisode);
+      if (eps.length > 0) return eps;
+    } catch {
+      /* thử URL tiếp theo */
+    }
   }
+  return [];
 }
 
 /** Gom các tập thành từng bộ truyện, sắp xếp theo thứ tự thêm vào. */

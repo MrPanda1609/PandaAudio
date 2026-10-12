@@ -13,8 +13,10 @@ interface Props {
 const BARS = [0.42, 0.75, 0.55, 1, 0.62, 0.88, 0.48];
 
 /** Đường dẫn thumbnail AI của truyện (nếu đã được tạo). */
+import { resolveArtUrl } from '../lib/appUrls';
+
 export function storyArtwork(storyId: string): string {
-  return `/art/${storyId}.webp`;
+  return resolveArtUrl(`/art/${storyId}.webp`);
 }
 
 /** Motif sóng âm trừu tượng — dùng cho artwork và empty state. */

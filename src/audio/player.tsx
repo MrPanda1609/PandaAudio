@@ -13,6 +13,8 @@ import { flushProgress, getProgress, loadRate, saveProgress, saveRate } from '..
 import { clearMediaSession, setupMediaSession, updatePositionState } from '../lib/mediaSession';
 import { sharedAnalyser } from './analyser';
 import { loadLibrary } from '../data/library';
+import { setBackgroundAudio } from '../lib/backgroundAudio';
+import { resolveAudioUrl } from '../lib/appUrls';
 
 export type SleepMode =
   | { kind: 'off' }
@@ -127,7 +129,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       st.current.pendingSeek =
         saved && saved.t > 10 && (dur === 0 || saved.t < dur - 15) ? saved.t : 0;
       if (a.getAttribute('src') !== ep.file) {
-        a.src = ep.file;
+        a.src = resolveAudioUrl(ep.file);
       } else if (st.current.pendingSeek > 0) {
         a.currentTime = Math.min(st.current.pendingSeek, Math.max(0, (a.duration || dur) - 1));
         st.current.pendingSeek = 0;
@@ -280,11 +282,15 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const onPlay = () => {
       setPlaying(true);
       setLoading(false);
+      // App Android: bật foreground service giữ audio dưới nền
+      const ep = st.current.queue[st.current.index];
+      void setBackgroundAudio(true, ep?.storyTitle, ep?.title);
     };
     const onPlaying = () => setLoading(false);
     const onPause = () => {
       setPlaying(false);
       setLoading(false);
+      void setBackgroundAudio(false);
       sharedAnalyser.suspend(); // dừng xử lý sóng âm để đỡ tốn pin
       const ep = st.current.queue[st.current.index];
       if (ep) flushProgress(ep.id, a.currentTime);
@@ -299,12 +305,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         s.sleep = { kind: 'off' };
         setSleepState({ kind: 'off' });
         setPlaying(false);
+        void setBackgroundAudio(false);
         return;
       }
       if (s.index + 1 < s.queue.length) {
         playAt(s.index + 1);
       } else {
         setPlaying(false);
+        void setBackgroundAudio(false);
       }
     };
     const onError = () => setLoading(false);
