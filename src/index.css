@@ -55,6 +55,7 @@ html, body {
   --art-to: #f9bcd7;
   --art-bars: #ec4899;
   --art-vignette: rgb(219 39 119 / 0.14);
+  --shimmer-hi: rgb(219 39 119 / 0.08);
   color-scheme: light;
 }
 
@@ -77,6 +78,7 @@ html, body {
   --art-to: #0b0b0f;
   --art-bars: #52525b;
   --art-vignette: rgb(0 0 0 / 0.45);
+  --shimmer-hi: rgb(255 255 255 / 0.07);
   color-scheme: dark;
 }
 
@@ -109,6 +111,59 @@ html, body {
 .theme-anim *::before,
 .theme-anim *::after {
   transition: background-color 0.35s ease, border-color 0.35s ease, color 0.35s ease !important;
+}
+
+/* Shimmer cho skeleton loading và ảnh đang tải */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, var(--shimmer-hi), transparent);
+  animation: shimmer-slide 1.6s infinite;
+  pointer-events: none;
+}
+@keyframes shimmer-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Gấu nhảy trên màn hình loading */
+@keyframes panda-bounce {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-14px) scale(1.05); }
+}
+.animate-panda-bounce {
+  animation: panda-bounce 1.2s ease-in-out infinite;
+}
+
+/* Cột sóng nhạc nhảy múa */
+@keyframes eq-dance {
+  0%, 100% { height: 8px; opacity: 0.5; }
+  50% { height: 26px; opacity: 1; }
+}
+.animate-eq {
+  animation: eq-dance 0.9s ease-in-out infinite;
+}
+
+/* Thanh progress chạy qua lại mượt */
+@keyframes loadbar-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}
+.animate-loadbar {
+  animation: loadbar-slide 1.4s ease-in-out infinite;
+}
+
+/* Màn hình loading mờ dần khi tải xong */
+@keyframes loader-fadeout {
+  to { opacity: 0; transform: scale(1.04); }
+}
+.animate-loader-fadeout {
+  animation: loader-fadeout 0.5s ease forwards;
 }
 
 body {

@@ -9,26 +9,10 @@ import { MiniPlayer } from './components/MiniPlayer';
 import { FullPlayer } from './components/FullPlayer';
 import { EmptyState } from './components/EmptyState';
 import { IconLibrary } from './components/Icons';
+import { LoadingScreen } from './components/LoadingScreen';
 import { ThemeToggle } from './components/ThemeToggle';
 
 type View = { type: 'home' } | { type: 'story'; id: string } | { type: 'category'; name: string };
-
-function LoadingSkeleton() {
-  return (
-    <div className="animate-pulse px-4 pt-6 sm:px-6 lg:px-8">
-      <div className="h-8 w-48 rounded-lg bg-ink-800" />
-      <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="rounded-2xl bg-ink-850 p-4">
-            <div className="aspect-square rounded-xl bg-ink-800" />
-            <div className="mt-3 h-4 w-3/4 rounded bg-ink-800" />
-            <div className="mt-2 h-3 w-1/2 rounded bg-ink-800" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 export default function App() {
   const { episodes, libraryLoaded, current, fullOpen, setFullOpen } = usePlayer();
@@ -42,6 +26,9 @@ export default function App() {
       return 'light';
     }
   });
+  // Màn hình loading: hiện lúc mở web, mờ dần khi tải xong thư viện
+  const [loaderVisible, setLoaderVisible] = useState(true);
+  const [loaderFading, setLoaderFading] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -56,6 +43,18 @@ export default function App() {
       /* bỏ qua */
     }
   }, [theme]);
+
+  useEffect(() => {
+    if (libraryLoaded) {
+      // chờ tối thiểu 900ms cho hiệu ứng loading được thấy, rồi mờ dần
+      const t1 = setTimeout(() => setLoaderFading(true), 900);
+      const t2 = setTimeout(() => setLoaderVisible(false), 1400);
+      return () => {
+        clearTimeout(t1);
+        clearTimeout(t2);
+      };
+    }
+  }, [libraryLoaded]);
 
   const toggleTheme = () => {
     // bật hiệu ứng chuyển màu mượt trong lúc đổi theme
@@ -140,9 +139,7 @@ export default function App() {
         </header>
 
         <main ref={mainRef} className="flex-1 overflow-y-auto pb-32">
-          {!libraryLoaded ? (
-            <LoadingSkeleton />
-          ) : stories.length === 0 ? (
+          {stories.length === 0 && libraryLoaded ? (
             <EmptyState />
           ) : activeCategory ? (
             <CategoryView
@@ -169,6 +166,13 @@ export default function App() {
 
       <MiniPlayer onOpen={() => setFullOpen(true)} />
       {fullOpen && current && <FullPlayer onClose={() => setFullOpen(false)} />}
+
+      {/* Màn hình loading toàn màn hình — mờ dần khi xong */}
+      {loaderVisible && (
+        <div className={loaderFading ? 'animate-loader-fadeout' : ''}>
+          <LoadingScreen />
+        </div>
+      )}
     </div>
   );
 }

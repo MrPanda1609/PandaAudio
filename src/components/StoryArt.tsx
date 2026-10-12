@@ -36,9 +36,10 @@ export function StoryArt({ storyId, category, className = 'h-12 w-12', rounded =
   const hue = categoryHue(category ?? storyId);
   const [imgOk, setImgOk] = useState(true);
   const [imgGone, setImgGone] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   return (
     <div
-      className={`relative flex shrink-0 items-center justify-center overflow-hidden ${rounded} ${className}`}
+      className={`relative flex shrink-0 items-center justify-center overflow-hidden ${rounded} ${className} ${imgOk && !imgLoaded ? 'shimmer' : ''}`}
       style={{ background: 'linear-gradient(150deg, var(--art-from) 0%, var(--art-mid) 55%, var(--art-to) 100%)' }}
       aria-hidden
     >
@@ -56,7 +57,7 @@ export function StoryArt({ storyId, category, className = 'h-12 w-12', rounded =
           loading="lazy"
           draggable={false}
           className="absolute inset-0 h-full w-full object-cover"
-          onLoad={() => setImgGone(false)}
+          onLoad={() => { setImgLoaded(true); setImgGone(false); }}
           onError={() => { setImgOk(false); setImgGone(true); }}
         />
       )}
