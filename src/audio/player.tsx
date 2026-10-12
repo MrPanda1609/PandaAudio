@@ -163,8 +163,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const a = audioRef.current;
     if (!a || !st.current.queue.length) return;
     if (a.paused) {
-      sharedAnalyser.ensure(a);
-      sharedAnalyser.resume();
+      // Analyser chỉ để vẽ sóng âm — nếu lỗi (WebView) thì bỏ qua, vẫn phải phát tiếng
+      try {
+        sharedAnalyser.ensure(a);
+        sharedAnalyser.resume();
+      } catch {
+        /* bỏ qua, phát trực tiếp không cần analyser */
+      }
       setLoading(true);
       void a.play().catch(() => setLoading(false));
     } else {

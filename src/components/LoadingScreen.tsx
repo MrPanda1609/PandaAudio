@@ -44,6 +44,11 @@ export function LoadingScreen() {
       <div className="mt-6 h-1.5 w-52 overflow-hidden rounded-full bg-ink-700">
         <div className="h-full w-1/3 rounded-full bg-brand-500 animate-loadbar" />
       </div>
+
+      {/* version build — để phân biệt các bản APK */}
+      <p className="mt-6 text-[11px] text-zinc-600">
+        v{__APP_VERSION__}
+      </p>
     </div>
   );
 }
