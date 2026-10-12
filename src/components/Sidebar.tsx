@@ -7,13 +7,14 @@ interface Props {
   activeView: 'home' | string; // 'home' hoặc storyId
   onHome: () => void;
   onSelectStory: (storyId: string) => void;
+  onDonate: () => void;
   mobileOpen: boolean;
   onCloseMobile: () => void;
   theme: 'light' | 'dark';
   onToggleTheme: () => void;
 }
 
-function NavContent({ stories, activeView, onHome, onSelectStory, theme, onToggleTheme }: Omit<Props, 'mobileOpen' | 'onCloseMobile'>) {
+function NavContent({ stories, activeView, onHome, onSelectStory, onDonate, theme, onToggleTheme }: Omit<Props, 'mobileOpen' | 'onCloseMobile'>) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-3">
@@ -39,6 +40,13 @@ function NavContent({ stories, activeView, onHome, onSelectStory, theme, onToggl
         >
           <IconHome className="h-5 w-5" />
           Trang chủ
+        </button>
+        <button
+          onClick={onDonate}
+          className="flex min-h-[44px] items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-zinc-400 transition-colors hover:bg-ink-850 hover:text-zinc-200"
+        >
+          <span role="img" aria-label="Ủng hộ" className="text-[20px] leading-none">🧋</span>
+          Ủng hộ admin
         </button>
       </nav>
 

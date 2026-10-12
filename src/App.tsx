@@ -9,6 +9,7 @@ import { MiniPlayer } from './components/MiniPlayer';
 import { FullPlayer } from './components/FullPlayer';
 import { EmptyState } from './components/EmptyState';
 import { IconLibrary } from './components/Icons';
+import { DonateModal } from './components/DonateModal';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ThemeToggle } from './components/ThemeToggle';
 
@@ -29,6 +30,8 @@ export default function App() {
   // Màn hình loading: hiện lúc mở web, mờ dần khi tải xong thư viện
   const [loaderVisible, setLoaderVisible] = useState(true);
   const [loaderFading, setLoaderFading] = useState(false);
+  // Modal donate "ăn xin"
+  const [donateOpen, setDonateOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -111,6 +114,7 @@ export default function App() {
         activeView={view.type === 'story' ? view.id : 'home'}
         onHome={goHome}
         onSelectStory={openStory}
+        onDonate={() => setDonateOpen(true)}
         mobileOpen={mobileNav}
         onCloseMobile={() => setMobileNav(false)}
         theme={theme}
@@ -173,6 +177,9 @@ export default function App() {
           <LoadingScreen />
         </div>
       )}
+
+      {/* Modal donate */}
+      {donateOpen && <DonateModal onClose={() => setDonateOpen(false)} />}
     </div>
   );
 }
