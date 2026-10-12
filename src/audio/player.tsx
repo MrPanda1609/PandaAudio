@@ -68,7 +68,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   if (!audioRef.current) {
     const a = new Audio();
-    a.preload = 'auto';
+    // 'metadata' thay vì 'auto': chỉ tải thông tin file trước, bấm phát mới stream.
+    // 'auto' sẽ tải cả file 15MB+ ngay khi chọn truyện → chậm, tốn data 4G.
+    a.preload = 'metadata';
     audioRef.current = a;
   }
 
