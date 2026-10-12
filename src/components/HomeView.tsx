@@ -37,7 +37,7 @@ function SectionTitle({ title, sub }: { title: string; sub?: string }) {
 }
 
 /** Thẻ gợi ý ngang — vuốt bằng ngón tay cái, snap từng thẻ. */
-function PickCard({ episode }: { episode: Episode }) {
+function PickCard({ episode, epNum, epTotal }: { episode: Episode; epNum: number; epTotal: number }) {
   const { playEpisode, current, playing } = usePlayer();
   const isCurrent = current?.id === episode.id && playing;
   const p = getProgress(episode.id);
@@ -62,7 +62,9 @@ function PickCard({ episode }: { episode: Episode }) {
       <p className="mt-2.5 line-clamp-2 min-h-[2.5em] text-[13.5px] font-semibold leading-snug text-zinc-100">
         {episode.storyTitle}
       </p>
-      <p className="mt-1 truncate text-[12px] text-zinc-500">{episode.category ?? 'Truyện audio'}</p>
+      <p className="mt-1 truncate text-[12px] text-zinc-500">
+        {epTotal > 1 ? `Tập ${epNum}/${epTotal} · ` : ''}{episode.category ?? 'Truyện audio'}
+      </p>
       {pct > 0 && (
         <div className="mt-2 h-1 overflow-hidden rounded-full bg-ink-700">
           <div className="h-full rounded-full bg-brand-500" style={{ width: `${pct}%` }} />
@@ -132,6 +134,15 @@ export function HomeView({
 }: Props) {
   const { playEpisode, current, playing } = usePlayer();
 
+  // Map storyId -> episodes để tra tập mấy / tổng mấy tập
+  const storyEps = new Map<string, Episode[]>();
+  for (const s of stories) storyEps.set(s.id, s.episodes);
+  const epInfo = (ep: Episode): [number, number] => {
+    const eps = storyEps.get(ep.storyId) ?? [];
+    const idx = eps.findIndex((e) => e.id === ep.id);
+    return [idx >= 0 ? idx + 1 : 1, eps.length];
+  };
+
   return (
     <div className="animate-fade-up pb-8 pt-6">
       <h1 className="px-4 text-[22px] font-bold tracking-tight text-zinc-50 sm:px-6 sm:text-2xl lg:px-8">
@@ -164,9 +175,10 @@ export function HomeView({
             </div>
           </div>
           <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1 sm:px-6 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-8 xl:grid-cols-6 2xl:grid-cols-8">
-            {todayPicks.map((ep) => (
-              <PickCard key={ep.id} episode={ep} />
-            ))}
+            {todayPicks.map((ep) => {
+              const [num, total] = epInfo(ep);
+              return <PickCard key={ep.id} episode={ep} epNum={num} epTotal={total} />;
+            })}
           </div>
         </section>
       )}
@@ -179,6 +191,7 @@ export function HomeView({
             {continueList.map(({ episode, t }) => {
               const isCurrent = current?.id === episode.id && playing;
               const pct = episode.duration > 0 ? Math.min(100, (t / episode.duration) * 100) : 0;
+              const [num, total] = epInfo(episode);
               return (
                 <button
                   key={episode.id}
@@ -190,7 +203,9 @@ export function HomeView({
                     <p className="truncate text-[14.5px] font-semibold text-zinc-100">
                       {episode.title}
                     </p>
-                    <p className="truncate text-[12.5px] text-zinc-400">{episode.storyTitle}</p>
+                    <p className="truncate text-[12.5px] text-zinc-400">
+                      {total > 1 ? `Tập ${num}/${total} · ` : ''}{episode.storyTitle}
+                    </p>
                     <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-ink-700">
                       <div
                         className="h-full rounded-full bg-brand-500"
