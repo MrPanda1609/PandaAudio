@@ -32,6 +32,18 @@ public class BackgroundAudioPlugin extends Plugin {
         }
     }
 
+    /** Service gọi khi user bấm ✕ đóng hoặc vuốt ẩn notification → WebView dừng audio hẳn. */
+    public static void notifyClose() {
+        if (instance != null && instance.getBridge() != null) {
+            instance.getBridge().executeOnMainThread(() ->
+                instance.getBridge().eval(
+                    "window.dispatchEvent(new CustomEvent('panda-native-close'))",
+                    null
+                )
+            );
+        }
+    }
+
     /** Cập nhật trạng thái play/pause của notification (đồng bộ icon). */
     @PluginMethod
     public void setPlaying(PluginCall call) {

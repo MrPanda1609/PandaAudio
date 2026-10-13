@@ -188,8 +188,19 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       if (playing === true && a.paused) toggle();
       else if (playing === false && !a.paused) toggle();
     };
+    // App Android: bấm ✕ đóng hoặc vuốt ẩn notification → dừng audio hẳn
+    const onNativeClose = () => {
+      const a = audioRef.current;
+      if (a && !a.paused) a.pause();
+      setPlaying(false);
+      void setBackgroundAudio(false);
+    };
     window.addEventListener('panda-native-toggle', onNativeToggle);
-    return () => window.removeEventListener('panda-native-toggle', onNativeToggle);
+    window.addEventListener('panda-native-close', onNativeClose);
+    return () => {
+      window.removeEventListener('panda-native-toggle', onNativeToggle);
+      window.removeEventListener('panda-native-close', onNativeClose);
+    };
   }, [toggle]);
 
   const next = useCallback(() => {
